@@ -70,15 +70,14 @@ class image_process {
 		
 		if(!empty($_FILES['file']['name'])) {
 			
-			$caption	=  $_POST['caption'];
 			
 			//cleanup file name
 			$new_name	=  preg_replace('/[^a-zA-Z0-9.]/', '_', $_FILES['file']['name']);
 			
 			//setup upload configuration
 			$config		= array(
-							'upload_path' 	=> $this->newpath,
-							'allowed_types' => "gif|jpg|png|jpeg",
+							'upload_path'	=> $this->newpath,
+							'allowed_types'	=> "gif|jpg|png|jpeg",
 							'overwrite'		=> false,
 							'max_size'		=> "10485760", 
 							'file_name'		=> strtolower(basename($new_name)),
@@ -95,15 +94,16 @@ class image_process {
                 $image_data = $this->CI->upload->data(); //get uploaded image detail
 				
 				//setup image detail to saved in database
-				$image_link = $this->imgurl.$this->year.'/'.$this->month.'/'.$image_data["file_name"];
-				$image_path = '/'.$this->year.'/'.$this->month.'/'.$image_data["file_name"];
-				$thumb_path = '/'.$this->year.'/'.$this->month.'/'.$image_data["raw_name"].'_thumb'.$image_data['file_ext'];
+				$image_link	= $this->imgurl.$this->year.'/'.$this->month.'/'.$image_data["file_name"];
+				$image_path	= '/'.$this->year.'/'.$this->month.'/'.$image_data["file_name"];
+				$thumb_path	= '/'.$this->year.'/'.$this->month.'/'.$image_data["raw_name"].'_thumb'.$image_data['file_ext'];
 
                 //generate image thumbnail thumbnail			
 				$this->generate_thumb($image_data['full_path'], $image_data['file_path']);
 							
 				$image_name		= $this->CI->input->post('name');
-				
+				$caption		= $this->CI->input->post('caption');
+			
 				//generate array to save data
 				$dataToSave 	= array(
 									'captions' 	=> $caption,
@@ -133,11 +133,9 @@ class image_process {
 					
 		}
 		
-		
 		return $dataToSave;
 		
-		
-    }
+	}
 	
 	/*
 	*		function to generate image thumbnail
@@ -150,14 +148,14 @@ class image_process {
 		
 		//config to generate image thumbnail
 		$config_ = array(
-						'image_library'	 => 'gd2',
-						'source_image'	 => $source_path,
-						'new_image' 	 => $target_path,
-						'maintain_ratio' => TRUE,
-						'create_thumb' 	 => TRUE,
-						'thumb_marker'	 => '_thumb',
-						'width' 		 => 150,	//set thumbnail width
-						'height'		 => 150		//set thumbnail height
+						'image_library'		=> 'gd2',
+						'source_image'		=> $source_path,
+						'new_image'			=> $target_path,
+						'maintain_ratio'	=> TRUE,
+						'create_thumb'		=> TRUE,
+						'thumb_marker'		=> '_thumb',
+						'width'				=> 150,	//set thumbnail width
+						'height'			=> 150		//set thumbnail height
 					);
 		
 		$this->CI->load->library('image_lib', $config_);
